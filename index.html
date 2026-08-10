@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENTINELLA DOCS</title>
+<style>
+    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f6f8; color: #333; display: flex; flex-direction: column; height: 100vh; }
+    
+    /* 상단 헤더 (로고 추가 및 가로 정렬) */
+    .header { background-color: #111; color: #fff; display: flex; align-items: center; justify-content: center; padding: 15px 0; font-size: 20px; font-weight: 900; font-family: 'Arial Black', 'Impact', sans-serif; letter-spacing: 2px; }
+    .header-logo { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    
+    /* 탭 버튼 영역 */
+    .tab-container { display: flex; justify-content: center; background-color: #fff; border-bottom: 2px solid #ddd; padding: 10px; gap: 10px; }
+    .tab-btn { flex: 1; max-width: 200px; padding: 12px; background: #fff; border: 2px solid #ccc; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.2s; color: #555; }
+    .tab-btn.active { background: #E60024; color: white; border-color: #E60024; }
+    
+    /* PDF 뷰어 영역 */
+    .viewer-container { flex: 1; width: 100%; display: flex; flex-direction: column; }
+    iframe { width: 100%; height: 100%; border: none; }
+    
+    /* 모바일 대비용 (직접 열기 버튼) */
+    .fallback-area { text-align: center; padding: 10px; background-color: #ffe6e6; color: #E60024; font-size: 14px; font-weight: bold; }
+    .fallback-area a { color: #E60024; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="Sentinella.jpg" alt="로고" class="header-logo">
+        SENTINELLA DOCS
+    </div>
+
+    <div class="tab-container">
+        <button id="btn-intro" class="tab-btn active" onclick="loadPdf('센티넬라 소개.pdf', 'btn-intro')">센티넬라 소개</button>
+        <button id="btn-rules" class="tab-btn" onclick="loadPdf('센티넬라 운영안.pdf', 'btn-rules')">센티넬라 운영안</button>
+    </div>
+
+    <div class="fallback-area">
+        💡 화면에 문서가 보이지 않는다면 <a id="direct-link" href="센티넬라 소개.pdf" target="_blank">여기</a>를 눌러 직접 열어보세요.
+    </div>
+
+    <div class="viewer-container">
+        <iframe id="pdf-frame" src="센티넬라 소개.pdf"></iframe>
+    </div>
+
+<script>
+    function loadPdf(fileName, btnId) {
+        // iframe 및 링크 주소 변경
+        document.getElementById('pdf-frame').src = fileName;
+        document.getElementById('direct-link').href = fileName;
+
+        // 버튼 색상 변경 (활성화 상태)
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.getElementById(btnId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>

@@ -5,23 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SENTINELLA DOCS</title>
 <style>
-    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f6f8; color: #333; display: flex; flex-direction: column; height: 100vh; }
+    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f6f8; color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
-    /* 상단 헤더 (로고 추가 및 가로 정렬) */
-    .header { background-color: #111; color: #fff; display: flex; align-items: center; justify-content: center; padding: 15px 0; font-size: 20px; font-weight: 900; font-family: 'Arial Black', 'Impact', sans-serif; letter-spacing: 2px; }
+    /* 상단 헤더 */
+    .header { background-color: #111; color: #fff; display: flex; align-items: center; justify-content: center; padding: 15px 0; font-size: 20px; font-weight: 900; font-family: 'Arial Black', 'Impact', sans-serif; letter-spacing: 2px; flex-shrink: 0; }
     .header-logo { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
     
     /* 탭 버튼 영역 */
-    .tab-container { display: flex; justify-content: center; background-color: #fff; border-bottom: 2px solid #ddd; padding: 10px; gap: 10px; }
+    .tab-container { display: flex; justify-content: center; background-color: #fff; border-bottom: 2px solid #ddd; padding: 10px; gap: 10px; flex-shrink: 0; }
     .tab-btn { flex: 1; max-width: 200px; padding: 12px; background: #fff; border: 2px solid #ccc; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.2s; color: #555; }
     .tab-btn.active { background: #E60024; color: white; border-color: #E60024; }
     
-    /* PDF 뷰어 영역 */
-    .viewer-container { flex: 1; width: 100%; display: flex; flex-direction: column; }
-    iframe { width: 100%; height: 100%; border: none; }
+    /* 콘텐츠 영역 공통 */
+    .content-section { display: none; width: 100%; height: 100%; flex-direction: column; overflow: hidden; }
+    .content-section.active { display: flex; }
     
-    /* 모바일 대비용 (직접 열기 버튼) */
-    .fallback-area { text-align: center; padding: 10px; background-color: #ffe6e6; color: #E60024; font-size: 14px; font-weight: bold; }
+    /* 1. 이미지 뷰어 (소개 탭) - 여러 이미지를 웹툰처럼 세로로 나열 */
+    .image-viewer { width: 100%; height: 100%; overflow-y: auto; background-color: #222; text-align: center; }
+    .image-viewer img { width: 100%; max-width: 800px; height: auto; display: block; margin: 0 auto; }
+    
+    /* 2. PDF 뷰어 (운영안 탭) */
+    iframe { width: 100%; flex: 1; border: none; }
+    .fallback-area { text-align: center; padding: 10px; background-color: #ffe6e6; color: #E60024; font-size: 14px; font-weight: bold; flex-shrink: 0; }
     .fallback-area a { color: #E60024; text-decoration: underline; }
 </style>
 </head>
@@ -33,29 +38,51 @@
     </div>
 
     <div class="tab-container">
-        <button id="btn-intro" class="tab-btn active" onclick="loadPdf('센티넬라 소개.pdf', 'btn-intro')">센티넬라 소개</button>
-        <button id="btn-rules" class="tab-btn" onclick="loadPdf('센티넬라 운영안.pdf', 'btn-rules')">센티넬라 운영안</button>
+        <!-- 탭 버튼 -->
+        <button id="btn-intro" class="tab-btn active" onclick="switchTab('intro')">센티넬라 소개</button>
+        <button id="btn-rules" class="tab-btn" onclick="switchTab('rules')">센티넬라 운영안</button>
     </div>
 
-    <div class="fallback-area">
-        💡 화면에 문서가 보이지 않는다면 <a id="direct-link" href="센티넬라 소개.pdf" target="_blank">여기</a>를 눌러 직접 열어보세요.
+    <!-- 1. 센티넬라 소개 (이미지 뷰어 영역) -->
+    <div id="section-intro" class="content-section active">
+        <div class="image-viewer">
+            <!-- 0번부터 10번까지의 이미지를 순서대로 나열 -->
+            <img src="센티넬라 소개-이미지-0.jpg" alt="소개 1페이지">
+            <img src="센티넬라 소개-이미지-1.jpg" alt="소개 2페이지">
+            <img src="센티넬라 소개-이미지-2.jpg" alt="소개 3페이지">
+            <img src="센티넬라 소개-이미지-3.jpg" alt="소개 4페이지">
+            <img src="센티넬라 소개-이미지-4.jpg" alt="소개 5페이지">
+            <img src="센티넬라 소개-이미지-5.jpg" alt="소개 6페이지">
+            <img src="센티넬라 소개-이미지-6.jpg" alt="소개 7페이지">
+            <img src="센티넬라 소개-이미지-7.jpg" alt="소개 8페이지">
+            <img src="센티넬라 소개-이미지-8.jpg" alt="소개 9페이지">
+            <img src="센티넬라 소개-이미지-9.jpg" alt="소개 10페이지">
+            <img src="센티넬라 소개-이미지-10.jpg" alt="소개 11페이지">
+        </div>
     </div>
 
-    <div class="viewer-container">
-        <iframe id="pdf-frame" src="센티넬라 소개.pdf"></iframe>
+    <!-- 2. 센티넬라 운영안 (PDF 뷰어 영역) -->
+    <div id="section-rules" class="content-section">
+        <div class="fallback-area">
+            💡 모바일 화면에서 글씨가 잘 안 보인다면 <a href="센티넬라 운영안.pdf" target="_blank">여기</a>를 눌러 원본으로 읽어보세요.
+        </div>
+        <iframe src="센티넬라 운영안.pdf"></iframe>
     </div>
 
 <script>
-    function loadPdf(fileName, btnId) {
-        // iframe 및 링크 주소 변경
-        document.getElementById('pdf-frame').src = fileName;
-        document.getElementById('direct-link').href = fileName;
+    function switchTab(tabName) {
+        // 모든 탭 버튼과 콘텐츠 영역 초기화
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
 
-        // 버튼 색상 변경 (활성화 상태)
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        document.getElementById(btnId).classList.add('active');
+        // 선택된 탭 활성화
+        if (tabName === 'intro') {
+            document.getElementById('btn-intro').classList.add('active');
+            document.getElementById('section-intro').classList.add('active');
+        } else if (tabName === 'rules') {
+            document.getElementById('btn-rules').classList.add('active');
+            document.getElementById('section-rules').classList.add('active');
+        }
     }
 </script>
 
